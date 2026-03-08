@@ -70,7 +70,7 @@ export function makeInitCommand(): Command {
             chalk.dim("  Edit the config file to customize settings."),
           );
           chrome.log(
-            chalk.dim("  Start the server with: npx agent-pulse server start"),
+            chalk.dim("  Start the server with: npx agentpulse server start"),
           );
           chrome.blank();
         }

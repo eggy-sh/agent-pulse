@@ -9,9 +9,9 @@ const PREFIX = chalk.bold.cyan("pulse");
  * so they never pollute piped data output. Data output (json) goes to stdout.
  *
  * This means:
- *   npx agent-pulse runs --json | jq .       # clean JSON, no chrome
- *   npx agent-pulse exec --service x -- ls   # ls output on stdout, pulse messages on stderr
- *   npx agent-pulse status 2>/dev/null        # just the table
+ *   npx agentpulse runs --json | jq .       # clean JSON, no chrome
+ *   npx agentpulse exec --service x -- ls   # ls output on stdout, pulse messages on stderr
+ *   npx agentpulse status 2>/dev/null        # just the table
  */
 export const log = {
   info: (msg: string) => console.error(`${PREFIX} ${msg}`),

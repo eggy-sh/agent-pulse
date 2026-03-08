@@ -28,8 +28,8 @@ Teach the OpenClaw agent to wrap important commands with `agent-pulse exec`. The
 1. Start the server:
 
 ```bash
-npx agent-pulse init
-npx agent-pulse server start
+npx agentpulse init
+npx agentpulse server start
 ```
 
 2. Copy the skill file into your OpenClaw skills directory:
@@ -44,14 +44,14 @@ Or, if using a project-level skills directory:
 cp examples/openclaw/SKILL.md .openclaw/skills/agent-pulse-observability/SKILL.md
 ```
 
-3. The agent will now see the skill and use `npx agent-pulse exec` wrappers when appropriate.
+3. The agent will now see the skill and use `npx agentpulse exec` wrappers when appropriate.
 
 #### What the Agent Does
 
 With the skill loaded, the agent will wrap important commands like this:
 
 ```bash
-npx agent-pulse exec \
+npx agentpulse exec \
   --service openclaw/github \
   --tool gh \
   --resource pulls \
@@ -71,8 +71,8 @@ Configure OpenClaw's plugin system to send `before_tool_call` and `after_tool_ca
 1. Start the server:
 
 ```bash
-npx agent-pulse init
-npx agent-pulse server start
+npx agentpulse init
+npx agentpulse server start
 ```
 
 2. Add the plugin configuration to your OpenClaw config file (`~/.openclaw/config.json` or `.openclaw/config.json`):
@@ -82,8 +82,8 @@ npx agent-pulse server start
   "plugins": {
     "agent-pulse": {
       "hooks": {
-        "before_tool_call": "npx agent-pulse hook openclaw",
-        "after_tool_call": "npx agent-pulse hook openclaw"
+        "before_tool_call": "npx agentpulse hook openclaw",
+        "after_tool_call": "npx agentpulse hook openclaw"
       }
     }
   }
@@ -97,7 +97,7 @@ That is it. OpenClaw will pipe event JSON to agent-pulse on every tool call.
 When OpenClaw makes a tool call, the plugin hook system:
 
 1. Serializes the event as JSON (tool name, params, session info)
-2. Pipes it to `npx agent-pulse hook openclaw` via stdin
+2. Pipes it to `npx agentpulse hook openclaw` via stdin
 3. The handler parses the command, determines the service/tool/resource, and sends the appropriate lifecycle event
 
 For `exec` tool calls, the handler:
@@ -128,7 +128,7 @@ When both fire for the same command, you get two runs tracked: one from the hook
 After an OpenClaw session that interacts with GitHub and Kubernetes:
 
 ```bash
-$ npx agent-pulse status
+$ npx agentpulse status
 
 SERVICE                   STATUS      RUNS  STALE  DEAD
 openclaw/github           completed      3      0     0
@@ -140,7 +140,7 @@ openclaw/browser          completed      2      0     0
 To see individual runs with details:
 
 ```bash
-$ npx agent-pulse status --service openclaw/github
+$ npx agentpulse status --service openclaw/github
 
 RUN ID       TOOL     RESOURCE  STATUS     DURATION   EXIT
 nk8f2a...    gh       pulls     completed  1.2s       0
@@ -151,13 +151,13 @@ m4p7q2...    gh       actions   completed  2.1s       0
 To see only stuck or failed runs:
 
 ```bash
-$ npx agent-pulse status --filter stale,dead
+$ npx agentpulse status --filter stale,dead
 ```
 
 For JSON output (useful for automation):
 
 ```bash
-$ npx agent-pulse status --json
+$ npx agentpulse status --json
 ```
 
 ## Event Mapping Reference
@@ -194,7 +194,7 @@ The hook handler maps CLI binaries to command families:
 Make sure `agent-pulse` is available via `npx`. Test by piping a sample event manually:
 
 ```bash
-echo '{"event":"before_tool_call","tool":"exec","params":{"command":"echo hello"},"session":{"id":"test"}}' | npx agent-pulse hook openclaw
+echo '{"event":"before_tool_call","tool":"exec","params":{"command":"echo hello"},"session":{"id":"test"}}' | npx agentpulse hook openclaw
 ```
 
 Check for errors in the output. If you see `[agent-pulse] Failed to parse OpenClaw hook event JSON`, the JSON input is malformed.
@@ -204,7 +204,7 @@ Check for errors in the output. If you see `[agent-pulse] Failed to parse OpenCl
 Ensure the agent-pulse server is running:
 
 ```bash
-npx agent-pulse server start
+npx agentpulse server start
 ```
 
 Check that the port in your config matches (default: 7778):
@@ -220,7 +220,7 @@ If the server was not running when hooks fired, events are lost (fire-and-forget
 Check that events are reaching the hook by adding temporary logging:
 
 ```bash
-echo '{"event":"before_tool_call","tool":"exec","params":{"command":"gh pr list"},"session":{"id":"test-123"}}' | npx agent-pulse hook openclaw && npx agent-pulse status
+echo '{"event":"before_tool_call","tool":"exec","params":{"command":"gh pr list"},"session":{"id":"test-123"}}' | npx agentpulse hook openclaw && npx agentpulse status
 ```
 
 ### Skill not loading
@@ -234,7 +234,7 @@ ls ~/.openclaw/skills/agent-pulse-observability/SKILL.md
 Make sure the YAML frontmatter is valid. Verify `agent-pulse` is available:
 
 ```bash
-npx agent-pulse --version
+npx agentpulse --version
 ```
 
 ### Redaction

@@ -15,7 +15,7 @@ export function createProgram(): Command {
   const program = new Command();
 
   program
-    .name("agent-pulse")
+    .name("agentpulse")
     .description(
       "CLI-first observability layer for AI agents — lifecycle tracking, stuck-run detection, and silent failure alerts",
     )

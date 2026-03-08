@@ -404,7 +404,7 @@ wrapper pattern.
 ```typescript
 // agent-pulse-anthropic.ts — Anthropic Agent SDK wrapper
 
-import { PulseClient } from "agent-pulse";
+import { PulseClient } from "agentpulse";
 
 const pulse = new PulseClient({ sessionId: "anthropic-agent-session" });
 
@@ -475,7 +475,7 @@ the generic hook CLI. This works for Python, Ruby, Go, Rust, or any language.
 ### exec wrapper (simplest)
 
 ```bash
-npx agent-pulse exec \
+npx agentpulse exec \
   --service my-agent/github \
   --tool gh \
   --resource pulls \
@@ -486,7 +486,7 @@ npx agent-pulse exec \
 
 ```bash
 # Before tool execution
-npx agent-pulse hook generic \
+npx agentpulse hook generic \
   --action lock \
   --service my-agent/tool \
   --tool mytool \
@@ -494,7 +494,7 @@ npx agent-pulse hook generic \
   --session my-session-id
 
 # After tool execution
-npx agent-pulse hook generic \
+npx agentpulse hook generic \
   --action unlock \
   --service my-agent/tool \
   --exit-code 0 \
@@ -548,7 +548,7 @@ result = run_with_pulse(
 For deeper integration without shelling out, use `PulseClient` directly:
 
 ```typescript
-import { PulseClient } from "agent-pulse";
+import { PulseClient } from "agentpulse";
 
 const pulse = new PulseClient({ sessionId: "my-session" });
 

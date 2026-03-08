@@ -42,10 +42,10 @@ That is the gap `agent-pulse` is built to fill.
 
 **Silent failure detection** -- if a run stops sending heartbeats entirely, it is marked `dead`. No more silent disappearances.
 
-**Universal CLI wrapper** -- wrap any command with `npx agent-pulse exec` and get automatic lifecycle tracking, duration capture, and exit code recording. No code changes required.
+**Universal CLI wrapper** -- wrap any command with `npx agentpulse exec` and get automatic lifecycle tracking, duration capture, and exit code recording. No code changes required.
 
 ```
-npx agent-pulse exec --service github --tool gh --resource pulls \
+npx agentpulse exec --service github --tool gh --resource pulls \
   -- gh pr list --repo myorg/myrepo
 ```
 
@@ -53,17 +53,17 @@ npx agent-pulse exec --service github --tool gh --resource pulls \
 
 ```bash
 # Initialize configuration
-npx agent-pulse init
+npx agentpulse init
 
 # Start the local server
-npx agent-pulse server start
+npx agentpulse server start
 
 # Wrap any CLI command with automatic tracking
-npx agent-pulse exec --service github --tool gh --resource pulls \
+npx agentpulse exec --service github --tool gh --resource pulls \
   -- gh pr list --repo myorg/myrepo
 
 # Check status
-npx agent-pulse status
+npx agentpulse status
 ```
 
 ## CLI Reference
@@ -74,10 +74,10 @@ The hero feature. Wraps any CLI command with automatic lifecycle tracking.
 
 ```bash
 # Basic usage
-npx agent-pulse exec --service my-service -- <command>
+npx agentpulse exec --service my-service -- <command>
 
 # Full metadata
-npx agent-pulse exec \
+npx agentpulse exec \
   --service github \
   --tool gh \
   --resource pulls \
@@ -86,7 +86,7 @@ npx agent-pulse exec \
   -- gh pr list --repo myorg/myrepo
 
 # With custom heartbeat interval
-npx agent-pulse exec \
+npx agentpulse exec \
   --service k8s \
   --tool kubectl \
   --heartbeat-interval 5000 \
@@ -104,8 +104,8 @@ What happens under the hood:
 Signal that work is starting.
 
 ```bash
-npx agent-pulse lock my-service
-npx agent-pulse lock my-service --tool gh --resource repos --message "Starting sync"
+npx agentpulse lock my-service
+npx agentpulse lock my-service --tool gh --resource repos --message "Starting sync"
 ```
 
 ### `agent-pulse beat <service>`
@@ -113,8 +113,8 @@ npx agent-pulse lock my-service --tool gh --resource repos --message "Starting s
 Send a heartbeat to indicate progress.
 
 ```bash
-npx agent-pulse beat my-service
-npx agent-pulse beat my-service --run-id abc123 --message "Processing page 3/10"
+npx agentpulse beat my-service
+npx agentpulse beat my-service --run-id abc123 --message "Processing page 3/10"
 ```
 
 ### `agent-pulse unlock <service>`
@@ -122,8 +122,8 @@ npx agent-pulse beat my-service --run-id abc123 --message "Processing page 3/10"
 Signal that work is complete.
 
 ```bash
-npx agent-pulse unlock my-service
-npx agent-pulse unlock my-service --run-id abc123 --exit-code 0
+npx agentpulse unlock my-service
+npx agentpulse unlock my-service --run-id abc123 --exit-code 0
 ```
 
 ### `agent-pulse status`
@@ -132,16 +132,16 @@ View current state of all tracked services and runs.
 
 ```bash
 # Overview
-npx agent-pulse status
+npx agentpulse status
 
 # Filter by service
-npx agent-pulse status --service github
+npx agentpulse status --service github
 
 # Show only stale/dead runs
-npx agent-pulse status --filter stale,dead
+npx agentpulse status --filter stale,dead
 
 # JSON output for automation
-npx agent-pulse status --json
+npx agentpulse status --json
 ```
 
 ### `agent-pulse server start`
@@ -149,8 +149,8 @@ npx agent-pulse status --json
 Start the local observability server.
 
 ```bash
-npx agent-pulse server start
-npx agent-pulse server start --port 7778 --host 127.0.0.1
+npx agentpulse server start
+npx agentpulse server start --port 7778 --host 127.0.0.1
 ```
 
 ### `agent-pulse init`
@@ -158,7 +158,7 @@ npx agent-pulse server start --port 7778 --host 127.0.0.1
 Initialize configuration and data directory.
 
 ```bash
-npx agent-pulse init
+npx agentpulse init
 ```
 
 Creates `~/.agent-pulse/config.json` with default settings.
@@ -168,7 +168,7 @@ Creates `~/.agent-pulse/config.json` with default settings.
 Use the TypeScript/Node.js client in your own tools and agents:
 
 ```typescript
-import { PulseClient } from "agent-pulse";
+import { PulseClient } from "agentpulse";
 
 const client = new PulseClient({
   serverUrl: "http://127.0.0.1:7778",
@@ -206,25 +206,25 @@ Add to your `.claude/settings.json`:
     "SessionStart": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "npx agent-pulse lock claude-code/session --tool session --message 'Session started'" }]
+        "hooks": [{ "type": "command", "command": "npx agentpulse lock claude-code/session --tool session --message 'Session started'" }]
       }
     ],
     "PreToolUse": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "echo '$TOOL_INPUT' | npx agent-pulse hook claude-code --event pre-tool-use" }]
+        "hooks": [{ "type": "command", "command": "echo '$TOOL_INPUT' | npx agentpulse hook claude-code --event pre-tool-use" }]
       }
     ],
     "PostToolUse": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "echo '$TOOL_INPUT' | npx agent-pulse hook claude-code --event post-tool-use" }]
+        "hooks": [{ "type": "command", "command": "echo '$TOOL_INPUT' | npx agentpulse hook claude-code --event post-tool-use" }]
       }
     ],
     "SessionEnd": [
       {
         "matcher": "",
-        "hooks": [{ "type": "command", "command": "npx agent-pulse unlock claude-code/session --tool session --message 'Session ended'" }]
+        "hooks": [{ "type": "command", "command": "npx agentpulse unlock claude-code/session --tool session --message 'Session ended'" }]
       }
     ]
   }
@@ -239,13 +239,13 @@ Claude Code's [`/loop`](https://code.claude.com/docs/en/scheduled-tasks) runs a 
 
 ```
 # Watch for stuck runs every 3 minutes
-/loop 3m check npx agent-pulse runs --status stale --json and tell me if anything is stuck
+/loop 3m check npx agentpulse runs --status stale --json and tell me if anything is stuck
 
 # Watch a specific deploy
-/loop 1m check npx agent-pulse runs --service agent/deploy and tell me when it finishes
+/loop 1m check npx agentpulse runs --service agent/deploy and tell me when it finishes
 
 # Full session health check
-/loop 10m run npx agent-pulse overview --json and summarize active, stale, and dead runs
+/loop 10m run npx agentpulse overview --json and summarize active, stale, and dead runs
 ```
 
 Hooks record what the agent does. `/loop` watches whether it's going well. See [docs/why-agent-observability.md](./docs/why-agent-observability.md) for why this pattern matters and where the market is headed.

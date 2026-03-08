@@ -11,10 +11,10 @@ import type { GwsCommandInfo, GwsResultInfo } from "../../adapters/gws.js";
  * Dedicated GWS (Google Workspace CLI) wrapper command.
  *
  * Usage:
- *   npx agent-pulse gws drive files list --params '{"pageSize": 10}'
+ *   npx agentpulse gws drive files list --params '{"pageSize": 10}'
  *
  * This is equivalent to:
- *   npx agent-pulse exec --service gws-drive --tool gws --resource files -- gws drive files list --params '{"pageSize": 10}'
+ *   npx agentpulse exec --service gws-drive --tool gws --resource files -- gws drive files list --params '{"pageSize": 10}'
  *
  * But with automatic metadata extraction and GWS-aware output parsing.
  */
@@ -51,16 +51,16 @@ export function makeGwsCommand(): Command {
 
       // Handle help explicitly since we disabled Commander's helpOption
       if (gwsArgs.length === 0 || gwsArgs[0] === "--help" || gwsArgs[0] === "-h") {
-        console.log(`Usage: npx agent-pulse gws <service> <resource> <method> [gws flags]
+        console.log(`Usage: npx agentpulse gws <service> <resource> <method> [gws flags]
 
 Wrap a gws (Google Workspace CLI) command with automatic observability.
 Auto-extracts service, resource, and method metadata from the gws command structure.
 
 Examples:
-  npx agent-pulse gws drive files list --params '{"pageSize": 10}'
-  npx agent-pulse gws sheets spreadsheets create --body '{"properties":{"title":"Report"}}'
-  npx agent-pulse gws gmail users messages list --params '{"userId":"me"}'
-  npx agent-pulse gws calendar events list --params '{"calendarId":"primary"}'
+  npx agentpulse gws drive files list --params '{"pageSize": 10}'
+  npx agentpulse gws sheets spreadsheets create --body '{"properties":{"title":"Report"}}'
+  npx agentpulse gws gmail users messages list --params '{"userId":"me"}'
+  npx agentpulse gws calendar events list --params '{"calendarId":"primary"}'
 
 Options:
   -s, --session <id>              Session ID
@@ -73,8 +73,8 @@ Options:
 
       if (gwsArgs.length === 0) {
         log.error("No gws command specified.");
-        log.dim("Usage: npx agent-pulse gws <service> <resource> <method> [gws flags]");
-        log.dim("Example: npx agent-pulse gws drive files list --params '{\"pageSize\": 10}'");
+        log.dim("Usage: npx agentpulse gws <service> <resource> <method> [gws flags]");
+        log.dim("Example: npx agentpulse gws drive files list --params '{\"pageSize\": 10}'");
         process.exit(1);
       }
 

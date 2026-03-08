@@ -1,10 +1,10 @@
 {
-  "name": "agent-pulse",
+  "name": "agentpulse",
   "version": "0.1.0",
   "description": "CLI-first observability layer for AI agents — lifecycle tracking, stuck-run detection, and resource-level health signals for agentic tool calls",
   "type": "module",
   "bin": {
-    "agent-pulse": "./dist/cli.js"
+    "agentpulse": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
