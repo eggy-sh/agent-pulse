@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import chalk from "chalk";
 import { PulseClient } from "../../core/client.js";
 import { redactCommand } from "../../utils/redact.js";
-import { log, formatDuration } from "../../utils/logger.js";
+import { log, chrome, formatDuration } from "../../utils/logger.js";
 
 export function makeExecCommand(): Command {
   const exec = new Command("exec")
@@ -37,7 +37,7 @@ export function makeExecCommand(): Command {
       if (!opts.service) {
         log.error("--service <name> is required");
         log.dim(
-          "Usage: agent-pulse exec --service <name> [options] -- <command...>",
+          "Usage: npx agent-pulse exec --service <name> [options] -- <command...>",
         );
         process.exit(1);
       }
@@ -50,7 +50,7 @@ export function makeExecCommand(): Command {
           "No command specified. Use -- to separate the command to execute.",
         );
         log.dim(
-          "Example: agent-pulse exec --service github -- gh pr list",
+          "Example: npx agent-pulse exec --service github -- gh pr list",
         );
         process.exit(1);
       }
@@ -79,7 +79,9 @@ export function makeExecCommand(): Command {
       });
 
       const heartbeatInterval = opts.heartbeatInterval ?? 15_000;
-      const quiet = opts.quiet === true;
+      // Auto-quiet when stdout is piped so pulse chrome doesn't
+      // pollute the child process output being captured.
+      const quiet = opts.quiet === true || !process.stdout.isTTY;
 
       let runId: string | undefined;
       let beatTimer: ReturnType<typeof setInterval> | undefined;
@@ -212,23 +214,23 @@ export function makeExecCommand(): Command {
             duration_human: formatDuration(duration),
           });
         } else if (!quiet) {
-          console.log("");
-          console.log(
+          chrome.blank();
+          chrome.log(
             chalk.dim("  ─────────────────────────────────"),
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("run_id")}     ${chalk.white(runId)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("service")}    ${chalk.white(opts.service)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("exit code")}  ${exitCode === 0 ? chalk.green(exitCode) : chalk.red(exitCode)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("duration")}   ${chalk.white(formatDuration(duration))}`,
           );
-          console.log("");
+          chrome.blank();
         }
 
         // Exit with the child's exit code

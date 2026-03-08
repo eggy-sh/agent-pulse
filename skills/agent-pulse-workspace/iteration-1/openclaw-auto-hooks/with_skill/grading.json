@@ -1,0 +1,31 @@
+{
+  "eval_id": 2,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "recommends_plugin_hooks",
+      "passed": true,
+      "evidence": "Recommends 'Approach 1: Plugin Hooks' with before_tool_call and after_tool_call configuration"
+    },
+    {
+      "text": "includes_config_json",
+      "passed": true,
+      "evidence": "Provides exact config.json with 'npx agent-pulse hook openclaw' for both hooks"
+    },
+    {
+      "text": "explains_command_family_mapping",
+      "passed": true,
+      "evidence": "Full table of binary-to-family mappings (gh->github, kubectl->kubernetes, etc.) with openclaw/ prefixed service names"
+    },
+    {
+      "text": "includes_setup_steps",
+      "passed": true,
+      "evidence": "Step 1 has npm install, agent-pulse init, and agent-pulse server start"
+    },
+    {
+      "text": "mentions_automatic_tracking",
+      "passed": true,
+      "evidence": "Explicitly states 'No skill files, no code changes, no wrapping individual commands' and 'every exec tool call is tracked automatically'"
+    }
+  ]
+}

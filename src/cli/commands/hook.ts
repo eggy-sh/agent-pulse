@@ -86,7 +86,7 @@ export function makeHookCommand(): Command {
                 "--action and --service are required for generic hooks",
               );
               log.dim(
-                'Usage: agent-pulse hook generic --action lock --service my-agent --tool bash --command "ls -la"',
+                'Usage: npx agent-pulse hook generic --action lock --service my-agent --tool bash --command "ls -la"',
               );
               process.exit(1);
             }

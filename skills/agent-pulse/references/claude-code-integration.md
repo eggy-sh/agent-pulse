@@ -118,7 +118,7 @@ the session stays marked active:
         "hooks": [
           {
             "type": "command",
-            "command": "npx agent-pulse hook claude-code --event pre-tool-use && agent-pulse beat claude-code/session"
+            "command": "npx agent-pulse hook claude-code --event pre-tool-use && npx agent-pulse beat claude-code/session"
           }
         ]
       }
@@ -127,7 +127,7 @@ the session stays marked active:
 }
 ```
 
-The `agent-pulse beat claude-code/session` call ensures the session run stays
+The `npx agent-pulse beat claude-code/session` call ensures the session run stays
 active as long as tool calls are happening. Without it, a session that goes
 quiet between tool calls could be marked stale.
 
@@ -184,7 +184,7 @@ watches for stuck runs, dead sessions, and anomalies while you work.
 ### Basic Monitoring Loop
 
 ```text
-/loop 5m check agent-pulse status for any stale or dead runs and alert me
+/loop 5m check npx agent-pulse status for any stale or dead runs and alert me
 ```
 
 This asks Claude to run `agent-pulse overview --json` every 5 minutes and
@@ -194,27 +194,27 @@ report anything that looks concerning.
 
 **Stale run watcher** — catch stuck tool calls early:
 ```text
-/loop 2m check agent-pulse runs --status stale --json and if there are any stale runs, tell me which service and how long they've been stuck
+/loop 2m check npx agent-pulse runs --status stale --json and if there are any stale runs, tell me which service and how long they've been stuck
 ```
 
 **Dead session detector** — find sessions that vanished:
 ```text
-/loop 5m check agent-pulse runs --status dead --json and alert me if any runs died in the last 10 minutes
+/loop 5m check npx agent-pulse runs --status dead --json and alert me if any runs died in the last 10 minutes
 ```
 
 **Full health dashboard** — periodic overview:
 ```text
-/loop 10m run agent-pulse overview --json and give me a brief status summary. highlight any services with stale or dead runs, and note any services with high failure rates
+/loop 10m run npx agent-pulse overview --json and give me a brief status summary. highlight any services with stale or dead runs, and note any services with high failure rates
 ```
 
 **Deployment watcher** — monitor a specific service:
 ```text
-/loop 1m check agent-pulse runs --service agent/deploy --json and tell me when the deploy completes or if it goes stale
+/loop 1m check npx agent-pulse runs --service agent/deploy --json and tell me when the deploy completes or if it goes stale
 ```
 
 **Session audit** — track what the current session is doing:
 ```text
-/loop 5m run agent-pulse runs --session $(agent-pulse overview --json | jq -r '.services[0].last_heartbeat // empty') --json and summarize what tools have been used and their success rate
+/loop 5m run npx agent-pulse runs --session $(npx agent-pulse overview --json | jq -r '.services[0].last_heartbeat // empty') --json and summarize what tools have been used and their success rate
 ```
 
 ### Loop + Hooks Together
@@ -234,7 +234,7 @@ First, set up hooks in `.claude/settings.json` (see Part 1 above).
 
 Then, at the start of a work session:
 ```text
-/loop 3m check agent-pulse for any stale or dead runs in my session and warn me. also tell me if any tool call took more than 30 seconds
+/loop 3m check npx agent-pulse for any stale or dead runs in my session and warn me. also tell me if any tool call took more than 30 seconds
 ```
 
 ### /loop Tips
@@ -269,9 +269,8 @@ These create a single-fire task that runs once and deletes itself.
 
 **Step 1: Install and start agent-pulse**
 ```bash
-npm install -g agent-pulse
-agent-pulse init
-agent-pulse server start
+npx agent-pulse init
+npx agent-pulse server start
 ```
 
 **Step 2: Add hooks to `.claude/settings.json`**
@@ -282,7 +281,7 @@ PostToolUse, SessionEnd).
 **Step 3: Start a Claude Code session and set up monitoring**
 
 ```text
-/loop 3m check agent-pulse status for stale or dead runs and alert me
+/loop 3m check npx agent-pulse status for stale or dead runs and alert me
 ```
 
 **Step 4: Work normally — everything is tracked**
@@ -293,5 +292,5 @@ is automatically tracked. The /loop watches for problems in the background.
 **Step 5: Review at session end**
 
 ```text
-show me agent-pulse overview for this session — what tools were used, how many succeeded/failed, and were there any issues?
+run npx agent-pulse overview --json and summarize this session — what tools were used, how many succeeded/failed, and were there any issues?
 ```

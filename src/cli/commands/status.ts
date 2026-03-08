@@ -4,6 +4,7 @@ import Table from "cli-table3";
 import { PulseClient } from "../../core/client.js";
 import {
   log,
+  chrome,
   formatStatus,
   formatSeverity,
   formatDuration,
@@ -53,22 +54,23 @@ export function makeStatusCommand(): Command {
         }
 
         // ---- Pretty output ----
+        // Headers/chrome go to stderr so piping the table works cleanly.
 
-        console.log("");
-        console.log(
+        chrome.blank();
+        chrome.log(
           chalk.bold.cyan("  agent-pulse status"),
         );
-        console.log(
+        chrome.log(
           chalk.dim(`  ${overview.timestamp}`),
         );
-        console.log("");
+        chrome.blank();
 
         // Summary line
         const { runs } = overview;
-        console.log(
+        chrome.log(
           `  ${chalk.green(runs.active)} active  ${chalk.yellow(runs.stale)} stale  ${chalk.red(runs.dead)} dead  ${chalk.dim(runs.completed + " completed")}  ${chalk.dim(runs.failed + " failed")}`,
         );
-        console.log("");
+        chrome.blank();
 
         // Services table
         let services = overview.services;
@@ -116,10 +118,10 @@ export function makeStatusCommand(): Command {
           }
 
           console.log(servicesTable.toString());
-          console.log("");
+          chrome.blank();
         } else {
           log.dim("  No services registered.");
-          console.log("");
+          chrome.blank();
         }
 
         // Active runs — we need to fetch runs separately
@@ -150,8 +152,8 @@ export function makeStatusCommand(): Command {
           ];
 
           if (allRuns.length > 0) {
-            console.log(chalk.bold("  Active Runs"));
-            console.log("");
+            chrome.log(chalk.bold("  Active Runs"));
+            chrome.blank();
 
             const runsTable = new Table({
               head: [
@@ -186,15 +188,15 @@ export function makeStatusCommand(): Command {
             }
 
             console.log(runsTable.toString());
-            console.log("");
+            chrome.blank();
           } else {
             log.dim("  No active runs.");
-            console.log("");
+            chrome.blank();
           }
         } catch {
           // If run listing fails (e.g., endpoint not available), just skip
           log.dim("  Could not fetch active runs.");
-          console.log("");
+          chrome.blank();
         }
       } catch (error) {
         if (jsonOutput) {
@@ -206,7 +208,7 @@ export function makeStatusCommand(): Command {
           log.error(
             `Failed to fetch status: ${error instanceof Error ? error.message : String(error)}`,
           );
-          log.dim("Is the server running? Start it with: agent-pulse server start");
+          log.dim("Is the server running? Start it with: npx agent-pulse server start");
         }
         process.exit(1);
       }

@@ -1,0 +1,37 @@
+{
+  "eval_id": 0,
+  "eval_name": "langchain-integration",
+  "prompt": "I have a LangChain agent that calls several tools. I want to track which tool calls are getting stuck. How do I add agent-pulse?",
+  "assertions": [
+    {
+      "name": "includes_setup_steps",
+      "description": "Mentions npm install, agent-pulse init, and server start",
+      "type": "contains_all",
+      "values": ["npm install", "agent-pulse init", "server start"]
+    },
+    {
+      "name": "provides_callback_handler",
+      "description": "Provides a LangChain callback handler class or function",
+      "type": "contains_any",
+      "values": ["BaseCallbackHandler", "CallbackHandler", "on_tool_start", "on_tool_end"]
+    },
+    {
+      "name": "uses_lifecycle_model",
+      "description": "References the lock/unlock lifecycle for tracking tool calls",
+      "type": "contains_all",
+      "values": ["lock", "unlock"]
+    },
+    {
+      "name": "mentions_stale_detection",
+      "description": "Explains that stuck tools will be detected as stale",
+      "type": "contains_any",
+      "values": ["stale", "stuck"]
+    },
+    {
+      "name": "includes_usage_example",
+      "description": "Shows how to attach the handler to a LangChain agent or chain",
+      "type": "contains_any",
+      "values": ["callbacks=", "AgentExecutor", "invoke"]
+    }
+  ]
+}

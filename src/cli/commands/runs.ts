@@ -4,6 +4,7 @@ import Table from "cli-table3";
 import { PulseClient } from "../../core/client.js";
 import {
   log,
+  chrome,
   formatStatus,
   formatDuration,
   formatSeverity,
@@ -38,10 +39,10 @@ function formatRunDuration(run: Run): string {
 }
 
 function printRunDetails(run: Run): void {
-  console.log("");
-  console.log(chalk.bold.cyan("  Run Details"));
-  console.log(chalk.dim("  " + "\u2501".repeat(40)));
-  console.log("");
+  chrome.blank();
+  chrome.log(chalk.bold.cyan("  Run Details"));
+  chrome.log(chalk.dim("  " + "\u2501".repeat(40)));
+  chrome.blank();
 
   const label = (s: string) => chalk.dim(s.padEnd(18));
 
@@ -130,12 +131,12 @@ export function makeRunsCommand(): Command {
           return;
         }
 
-        console.log("");
-        console.log(
+        chrome.blank();
+        chrome.log(
           chalk.bold.cyan("  Runs") +
             chalk.dim(` (${response.runs.length} of ${response.total})`),
         );
-        console.log("");
+        chrome.blank();
 
         const table = new Table({
           head: [
@@ -166,7 +167,7 @@ export function makeRunsCommand(): Command {
         }
 
         console.log(table.toString());
-        console.log("");
+        chrome.blank();
       } catch (error) {
         if (jsonOutput) {
           log.json({
@@ -177,7 +178,7 @@ export function makeRunsCommand(): Command {
           log.error(
             `Failed to fetch runs: ${error instanceof Error ? error.message : String(error)}`,
           );
-          log.dim("Is the server running? Start it with: agent-pulse server start");
+          log.dim("Is the server running? Start it with: npx agent-pulse server start");
         }
         process.exit(1);
       }

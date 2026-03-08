@@ -43,9 +43,8 @@ failure, or disappearance — through a simple lock/beat/unlock model.
 Before any integration, agent-pulse needs to be installed and its server running.
 
 ```bash
-npm install -g agent-pulse
-agent-pulse init
-agent-pulse server start
+npx agent-pulse init
+npx agent-pulse server start
 ```
 
 The server runs on `127.0.0.1:7778` by default (SQLite-backed, single process).
@@ -74,7 +73,7 @@ framework.
 The fastest way to add observability to any CLI invocation:
 
 ```bash
-agent-pulse exec \
+npx agent-pulse exec \
   --service <runtime>/<family> \
   --tool <binary> \
   --resource <resource_kind> \
@@ -83,7 +82,7 @@ agent-pulse exec \
 
 **Example:**
 ```bash
-agent-pulse exec \
+npx agent-pulse exec \
   --service agent/github \
   --tool gh \
   --resource pulls \
@@ -153,20 +152,20 @@ After integration, verify everything works:
 
 ```bash
 # Overview of all services
-agent-pulse overview
+npx agent-pulse overview
 
 # List recent runs
-agent-pulse runs
+npx agent-pulse runs
 
 # Filter by service
-agent-pulse runs --service claude-code/Bash
+npx agent-pulse runs --service claude-code/Bash
 
 # Filter by status (find problems)
-agent-pulse runs --status stale
-agent-pulse runs --status dead
+npx agent-pulse runs --status stale
+npx agent-pulse runs --status dead
 
 # JSON output for automation
-agent-pulse overview --json
+npx agent-pulse overview --json
 ```
 
 ## Monitor Configuration
@@ -218,7 +217,7 @@ CLI hook that accepts flags instead of stdin JSON:
 
 ```bash
 # On tool start
-agent-pulse hook generic \
+npx agent-pulse hook generic \
   --action lock \
   --service my-agent/tool \
   --tool gh \
@@ -226,7 +225,7 @@ agent-pulse hook generic \
   --session sess-123
 
 # On tool completion
-agent-pulse hook generic \
+npx agent-pulse hook generic \
   --action unlock \
   --service my-agent/tool \
   --tool gh \
@@ -238,14 +237,14 @@ This is the escape hatch for any runtime that can shell out to a CLI.
 
 ## Troubleshooting
 
-**Server not reachable:** Make sure `agent-pulse server start` is running.
+**Server not reachable:** Make sure `npx agent-pulse server start` is running.
 Test: `curl http://127.0.0.1:7778/api/v1/health`
 
 **No data after hook fires:** Events are fire-and-forget. Start the server
 before running your agent session.
 
 **Runs stuck as "locked":** The monitor marks them stale/dead after the
-configured thresholds. Check `agent-pulse runs --status locked`.
+configured thresholds. Check `npx agent-pulse runs --status locked`.
 
 **Redaction too aggressive:** Adjust `redact.patterns` in your config.
 

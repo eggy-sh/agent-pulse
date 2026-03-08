@@ -25,20 +25,14 @@ Teach the OpenClaw agent to wrap important commands with `agent-pulse exec`. The
 
 #### Setup
 
-1. Install agent-pulse:
+1. Start the server:
 
 ```bash
-npm install -g agent-pulse
+npx agent-pulse init
+npx agent-pulse server start
 ```
 
-2. Start the server:
-
-```bash
-agent-pulse init
-agent-pulse server start
-```
-
-3. Copy the skill file into your OpenClaw skills directory:
+2. Copy the skill file into your OpenClaw skills directory:
 
 ```bash
 cp examples/openclaw/SKILL.md ~/.openclaw/skills/agent-pulse-observability/SKILL.md
@@ -50,14 +44,14 @@ Or, if using a project-level skills directory:
 cp examples/openclaw/SKILL.md .openclaw/skills/agent-pulse-observability/SKILL.md
 ```
 
-4. The agent will now see the skill and use `agent-pulse exec` wrappers when appropriate.
+3. The agent will now see the skill and use `npx agent-pulse exec` wrappers when appropriate.
 
 #### What the Agent Does
 
 With the skill loaded, the agent will wrap important commands like this:
 
 ```bash
-agent-pulse exec \
+npx agent-pulse exec \
   --service openclaw/github \
   --tool gh \
   --resource pulls \
@@ -74,20 +68,14 @@ Configure OpenClaw's plugin system to send `before_tool_call` and `after_tool_ca
 
 #### Setup
 
-1. Install agent-pulse:
+1. Start the server:
 
 ```bash
-npm install -g agent-pulse
+npx agent-pulse init
+npx agent-pulse server start
 ```
 
-2. Start the server:
-
-```bash
-agent-pulse init
-agent-pulse server start
-```
-
-3. Add the plugin configuration to your OpenClaw config file (`~/.openclaw/config.json` or `.openclaw/config.json`):
+2. Add the plugin configuration to your OpenClaw config file (`~/.openclaw/config.json` or `.openclaw/config.json`):
 
 ```json
 {
@@ -140,7 +128,7 @@ When both fire for the same command, you get two runs tracked: one from the hook
 After an OpenClaw session that interacts with GitHub and Kubernetes:
 
 ```bash
-$ agent-pulse status
+$ npx agent-pulse status
 
 SERVICE                   STATUS      RUNS  STALE  DEAD
 openclaw/github           completed      3      0     0
@@ -152,7 +140,7 @@ openclaw/browser          completed      2      0     0
 To see individual runs with details:
 
 ```bash
-$ agent-pulse status --service openclaw/github
+$ npx agent-pulse status --service openclaw/github
 
 RUN ID       TOOL     RESOURCE  STATUS     DURATION   EXIT
 nk8f2a...    gh       pulls     completed  1.2s       0
@@ -163,13 +151,13 @@ m4p7q2...    gh       actions   completed  2.1s       0
 To see only stuck or failed runs:
 
 ```bash
-$ agent-pulse status --filter stale,dead
+$ npx agent-pulse status --filter stale,dead
 ```
 
 For JSON output (useful for automation):
 
 ```bash
-$ agent-pulse status --json
+$ npx agent-pulse status --json
 ```
 
 ## Event Mapping Reference
@@ -203,7 +191,7 @@ The hook handler maps CLI binaries to command families:
 
 ### Hook not firing
 
-Make sure `agent-pulse` is installed globally or available via `npx`. Test by piping a sample event manually:
+Make sure `agent-pulse` is available via `npx`. Test by piping a sample event manually:
 
 ```bash
 echo '{"event":"before_tool_call","tool":"exec","params":{"command":"echo hello"},"session":{"id":"test"}}' | npx agent-pulse hook openclaw
@@ -216,7 +204,7 @@ Check for errors in the output. If you see `[agent-pulse] Failed to parse OpenCl
 Ensure the agent-pulse server is running:
 
 ```bash
-agent-pulse server start
+npx agent-pulse server start
 ```
 
 Check that the port in your config matches (default: 7778):
@@ -232,7 +220,7 @@ If the server was not running when hooks fired, events are lost (fire-and-forget
 Check that events are reaching the hook by adding temporary logging:
 
 ```bash
-echo '{"event":"before_tool_call","tool":"exec","params":{"command":"gh pr list"},"session":{"id":"test-123"}}' | npx agent-pulse hook openclaw && agent-pulse status
+echo '{"event":"before_tool_call","tool":"exec","params":{"command":"gh pr list"},"session":{"id":"test-123"}}' | npx agent-pulse hook openclaw && npx agent-pulse status
 ```
 
 ### Skill not loading
@@ -243,10 +231,10 @@ Verify the skill file is in the correct location:
 ls ~/.openclaw/skills/agent-pulse-observability/SKILL.md
 ```
 
-Make sure the YAML frontmatter is valid. The `requires.bins` field means the agent will only use the skill if `agent-pulse` is available on PATH:
+Make sure the YAML frontmatter is valid. Verify `agent-pulse` is available:
 
 ```bash
-which agent-pulse
+npx agent-pulse --version
 ```
 
 ### Redaction

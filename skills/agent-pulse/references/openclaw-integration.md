@@ -126,7 +126,7 @@ Skip wrapping for:
 ## How to Wrap
 
 ```bash
-agent-pulse exec \
+npx agent-pulse exec \
   --service openclaw/<family> \
   --tool <binary> \
   --resource <resource_kind> \
@@ -137,19 +137,19 @@ agent-pulse exec \
 
 ```bash
 # GitHub operations
-agent-pulse exec --service openclaw/github --tool gh --resource pulls \
+npx agent-pulse exec --service openclaw/github --tool gh --resource pulls \
   -- gh pr list --repo myorg/myrepo
 
 # Google Workspace
-agent-pulse exec --service openclaw/google-workspace --tool gws --resource drive \
+npx agent-pulse exec --service openclaw/google-workspace --tool gws --resource drive \
   -- gws drive files list --params '{"pageSize": 10}'
 
 # Kubernetes
-agent-pulse exec --service openclaw/kubernetes --tool kubectl --resource pods \
+npx agent-pulse exec --service openclaw/kubernetes --tool kubectl --resource pods \
   -- kubectl get pods -n production
 
 # Database queries
-agent-pulse exec --service openclaw/database --tool psql --resource query \
+npx agent-pulse exec --service openclaw/database --tool psql --resource query \
   -- psql -c "SELECT count(*) FROM users"
 ```
 ```
@@ -190,7 +190,7 @@ metadata). This is by design.
 ## What You See After Integration
 
 ```bash
-$ agent-pulse status
+$ npx agent-pulse status
 
 SERVICE                   STATUS      RUNS  STALE  DEAD
 openclaw/github           completed      3      0     0
@@ -202,7 +202,7 @@ openclaw/browser          completed      2      0     0
 Detailed view:
 
 ```bash
-$ agent-pulse runs --service openclaw/github
+$ npx agent-pulse runs --service openclaw/github
 
 RUN ID       TOOL     RESOURCE  STATUS     DURATION   EXIT
 nk8f2a...    gh       pulls     completed  1.2s       0
@@ -219,10 +219,10 @@ m4p7q2...    gh       actions   completed  2.1s       0
 echo '{"event":"before_tool_call","tool":"exec","params":{"command":"echo hello"},"session":{"id":"test"}}' | npx agent-pulse hook openclaw
 ```
 
-**Skill not loading:** Verify location and that `agent-pulse` is on PATH:
+**Skill not loading:** Verify location and that `agent-pulse` is available:
 ```bash
 ls ~/.openclaw/skills/agent-pulse-observability/SKILL.md
-which agent-pulse
+npx agent-pulse --version
 ```
 
 **Duplicate runs in hybrid mode:** Expected — the hook tracks the outer tool

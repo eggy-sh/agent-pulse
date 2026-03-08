@@ -1,0 +1,31 @@
+{
+  "eval_id": 1,
+  "run_type": "with_skill",
+  "expectations": [
+    {
+      "text": "includes_hooks_config",
+      "passed": true,
+      "evidence": "Provides full .claude/settings.json config with all four hooks: SessionStart, PreToolUse, PostToolUse, SessionEnd"
+    },
+    {
+      "text": "includes_hook_commands",
+      "passed": true,
+      "evidence": "Uses 'npx agent-pulse hook claude-code --event pre-tool-use' and similar for all events"
+    },
+    {
+      "text": "includes_loop_command",
+      "passed": true,
+      "evidence": "Provides '/loop 3m check agent-pulse status for stale or dead runs' plus three more targeted variants"
+    },
+    {
+      "text": "includes_setup_steps",
+      "passed": true,
+      "evidence": "Prerequisites section with npm install, agent-pulse init, agent-pulse server start"
+    },
+    {
+      "text": "covers_session_tracking",
+      "passed": true,
+      "evidence": "SessionStart locks claude-code/session, SessionEnd unlocks it, PreToolUse includes session heartbeat"
+    }
+  ]
+}

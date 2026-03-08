@@ -1,0 +1,37 @@
+{
+  "eval_id": 2,
+  "eval_name": "openclaw-auto-hooks",
+  "prompt": "I'm building an OpenClaw plugin and want automatic observability for all exec tool calls. What's the easiest setup?",
+  "assertions": [
+    {
+      "name": "recommends_plugin_hooks",
+      "description": "Recommends the automatic plugin hooks approach (not skill-based)",
+      "type": "contains_any",
+      "values": ["before_tool_call", "after_tool_call", "plugin"]
+    },
+    {
+      "name": "includes_config_json",
+      "description": "Provides the OpenClaw config.json with hook configuration",
+      "type": "contains_all",
+      "values": ["config.json", "agent-pulse hook openclaw"]
+    },
+    {
+      "name": "explains_command_family_mapping",
+      "description": "Explains how CLI binaries are mapped to service names",
+      "type": "contains_any",
+      "values": ["command family", "openclaw/github", "openclaw/"]
+    },
+    {
+      "name": "includes_setup_steps",
+      "description": "Mentions installing and starting agent-pulse",
+      "type": "contains_any",
+      "values": ["npm install", "server start"]
+    },
+    {
+      "name": "mentions_automatic_tracking",
+      "description": "Emphasizes that tracking is automatic with no agent involvement",
+      "type": "contains_any",
+      "values": ["automatic", "automatically", "no agent", "zero"]
+    }
+  ]
+}

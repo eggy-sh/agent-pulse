@@ -7,7 +7,7 @@ import {
   saveConfig,
   DEFAULT_CONFIG,
 } from "../../core/config.js";
-import { log } from "../../utils/logger.js";
+import { log, chrome } from "../../utils/logger.js";
 
 export function makeInitCommand(): Command {
   const init = new Command("init")
@@ -48,31 +48,31 @@ export function makeInitCommand(): Command {
           });
         } else {
           log.success("Configuration initialized");
-          console.log("");
-          console.log(
+          chrome.blank();
+          chrome.log(
             `  ${chalk.dim("Config dir")}   ${chalk.white(configDir)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("Config file")}  ${chalk.white(configPath)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("Database")}     ${chalk.white(DEFAULT_CONFIG.database.path)}`,
           );
-          console.log("");
-          console.log(
+          chrome.blank();
+          chrome.log(
             `  ${chalk.dim("Server")}       ${chalk.white(`${DEFAULT_CONFIG.server.host}:${DEFAULT_CONFIG.server.port}`)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("Redaction")}    ${DEFAULT_CONFIG.redact.enabled ? chalk.green("enabled") : chalk.yellow("disabled")}`,
           );
-          console.log("");
-          console.log(
+          chrome.blank();
+          chrome.log(
             chalk.dim("  Edit the config file to customize settings."),
           );
-          console.log(
-            chalk.dim("  Start the server with: agent-pulse server start"),
+          chrome.log(
+            chalk.dim("  Start the server with: npx agent-pulse server start"),
           );
-          console.log("");
+          chrome.blank();
         }
       } catch (error) {
         if (jsonOutput) {

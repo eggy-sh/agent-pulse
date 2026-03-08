@@ -1,7 +1,7 @@
 import { Command } from "commander";
 import chalk from "chalk";
 import { PulseClient } from "../../core/client.js";
-import { log, formatDuration } from "../../utils/logger.js";
+import { log, chrome, formatDuration } from "../../utils/logger.js";
 import type { OverviewResponse, ServiceState } from "../../core/models.js";
 
 function timeSince(iso: string): string {
@@ -63,13 +63,13 @@ export function makeOverviewCommand(): Command {
 
         const { runs, services } = data;
 
-        // Header
-        console.log("");
-        console.log(chalk.bold.cyan("  agent-pulse overview"));
-        console.log(chalk.dim("  " + "\u2501".repeat(22)));
-        console.log("");
+        // Header → stderr so piping works cleanly
+        chrome.blank();
+        chrome.log(chalk.bold.cyan("  agent-pulse overview"));
+        chrome.log(chalk.dim("  " + "\u2501".repeat(22)));
+        chrome.blank();
 
-        // Summary counters
+        // Summary counters → stdout (this is data)
         const active = chalk.bold.green(String(runs.active).padStart(2));
         const stale = chalk.bold.yellow(String(runs.stale).padStart(2));
         const dead = chalk.bold.red(String(runs.dead).padStart(2));
@@ -82,11 +82,11 @@ export function makeOverviewCommand(): Command {
         console.log(
           `  ${chalk.dim("Completed")} ${completed}  ${chalk.dim("Failed")} ${failed}`,
         );
-        console.log("");
+        chrome.blank();
 
-        // Services list
+        // Services list → stdout (this is data)
         if (services.length > 0) {
-          console.log(chalk.dim("  Services:"));
+          chrome.log(chalk.dim("  Services:"));
 
           // Find the longest service name for alignment
           const maxNameLen = Math.max(
@@ -109,10 +109,10 @@ export function makeOverviewCommand(): Command {
             );
           }
         } else {
-          console.log(chalk.dim("  No services registered."));
+          log.dim("  No services registered.");
         }
 
-        console.log("");
+        chrome.blank();
       } catch (error) {
         if (jsonOutput) {
           log.json({
@@ -123,7 +123,7 @@ export function makeOverviewCommand(): Command {
           log.error(
             `Failed to fetch overview: ${error instanceof Error ? error.message : String(error)}`,
           );
-          log.dim("Is the server running? Start it with: agent-pulse server start");
+          log.dim("Is the server running? Start it with: npx agent-pulse server start");
         }
         process.exit(1);
       }

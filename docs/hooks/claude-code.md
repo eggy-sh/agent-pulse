@@ -17,20 +17,14 @@ Hooks are configured in `.claude/settings.json` (project-level) or `~/.claude/se
 
 ## Quick Setup
 
-### 1. Install agent-pulse
+### 1. Start the server
 
 ```bash
-npm install -g agent-pulse
+npx agent-pulse init
+npx agent-pulse server start
 ```
 
-### 2. Start the server
-
-```bash
-agent-pulse init
-agent-pulse server start
-```
-
-### 3. Add hooks to your Claude Code settings
+### 2. Add hooks to your Claude Code settings
 
 Create or edit `.claude/settings.json` in your project root:
 
@@ -106,7 +100,7 @@ That is it. Every tool call in your Claude Code session will now be tracked by `
 After a Claude Code session that read a file and ran a bash command:
 
 ```bash
-$ agent-pulse status
+$ npx agent-pulse status
 
 SERVICE                STATUS    RUNS  STALE  DEAD
 claude-code/session    active       1      0     0
@@ -147,7 +141,7 @@ For long-running sessions, you can add a heartbeat that fires on every tool call
         "hooks": [
           {
             "type": "command",
-            "command": "npx agent-pulse hook claude-code --event pre-tool-use && agent-pulse beat claude-code/session"
+            "command": "npx agent-pulse hook claude-code --event pre-tool-use && npx agent-pulse beat claude-code/session"
           }
         ]
       }
@@ -178,7 +172,7 @@ For long-running sessions, you can add a heartbeat that fires on every tool call
 }
 ```
 
-The `agent-pulse beat claude-code/session` call in `PreToolUse` ensures the session stays marked `active` as long as the agent is making tool calls. If the agent goes silent (no tool calls for the configured `max_silence_ms`), the session will transition to `stale`.
+The `npx agent-pulse beat claude-code/session` call in `PreToolUse` ensures the session stays marked `active` as long as the agent is making tool calls. If the agent goes silent (no tool calls for the configured `max_silence_ms`), the session will transition to `stale`.
 
 ## Privacy and Redaction
 
@@ -275,10 +269,10 @@ See [`src/hooks/claude-code.ts`](../src/hooks/claude-code.ts) for the full imple
 
 ## Troubleshooting
 
-**Hook not firing**: Make sure `agent-pulse` is installed globally or available via `npx`. Test by running the hook command manually.
+**Hook not firing**: Make sure `agent-pulse` is available via `npx`. Test by running the hook command manually.
 
-**Server not reachable**: Ensure `agent-pulse server start` is running. Check that the port in your config matches (default: 7778).
+**Server not reachable**: Ensure `npx agent-pulse server start` is running. Check that the port in your config matches (default: 7778).
 
-**No data appearing**: Check `agent-pulse status` after a session. If the server was not running when hooks fired, events are lost (fire-and-forget by default).
+**No data appearing**: Check `npx agent-pulse status` after a session. If the server was not running when hooks fired, events are lost (fire-and-forget by default).
 
 **Redaction too aggressive**: Adjust the `redact.patterns` array in your config. Patterns match against flag names and metadata keys, not values directly.

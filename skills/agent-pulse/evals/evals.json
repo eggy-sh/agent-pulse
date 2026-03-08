@@ -1,0 +1,23 @@
+{
+  "skill_name": "agent-pulse",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I have a LangChain agent that calls several tools. I want to track which tool calls are getting stuck. How do I add agent-pulse?",
+      "expected_output": "Provides a LangChain callback handler that integrates with agent-pulse, with setup instructions and usage example",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "Set up agent-pulse hooks in my Claude Code project so I can see what tools the agent is using, and also set up a /loop to alert me if anything goes stale",
+      "expected_output": "Provides Claude Code hooks config for .claude/settings.json and /loop examples for monitoring stale runs",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I'm building an OpenClaw plugin and want automatic observability for all exec tool calls. What's the easiest setup?",
+      "expected_output": "Recommends the plugin hooks approach with the config.json setup for automatic before_tool_call/after_tool_call tracking",
+      "files": []
+    }
+  ]
+}

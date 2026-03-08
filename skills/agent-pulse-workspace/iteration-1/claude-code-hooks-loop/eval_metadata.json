@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "eval_name": "claude-code-hooks-loop",
+  "prompt": "Set up agent-pulse hooks in my Claude Code project so I can see what tools the agent is using, and also set up a /loop to alert me if anything goes stale",
+  "assertions": [
+    {
+      "name": "includes_hooks_config",
+      "description": "Provides .claude/settings.json hook configuration",
+      "type": "contains_all",
+      "values": ["settings.json", "PreToolUse", "PostToolUse"]
+    },
+    {
+      "name": "includes_hook_commands",
+      "description": "Provides the agent-pulse hook claude-code commands",
+      "type": "contains_any",
+      "values": ["agent-pulse hook claude-code", "npx agent-pulse hook"]
+    },
+    {
+      "name": "includes_loop_command",
+      "description": "Provides a /loop command for monitoring stale runs",
+      "type": "contains_all",
+      "values": ["/loop", "stale"]
+    },
+    {
+      "name": "includes_setup_steps",
+      "description": "Mentions installing and starting agent-pulse",
+      "type": "contains_any",
+      "values": ["npm install", "server start"]
+    },
+    {
+      "name": "covers_session_tracking",
+      "description": "Mentions SessionStart or SessionEnd for session-level tracking",
+      "type": "contains_any",
+      "values": ["SessionStart", "SessionEnd", "session"]
+    }
+  ]
+}

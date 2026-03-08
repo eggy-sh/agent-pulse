@@ -37,7 +37,7 @@ class AgentPulseCallbackHandler(BaseCallbackHandler):
         """Fire-and-forget agent-pulse CLI call."""
         try:
             subprocess.run(
-                ["agent-pulse", "hook", "generic"] + args,
+                ["npx", "agent-pulse", "hook", "generic"] + args,
                 capture_output=True,
                 timeout=5,
             )
@@ -364,7 +364,7 @@ def pulse_tracked(
 def _pulse_fire(args: list[str]) -> None:
     try:
         subprocess.run(
-            ["agent-pulse", "hook", "generic"] + args,
+            ["npx", "agent-pulse", "hook", "generic"] + args,
             capture_output=True, timeout=5,
         )
     except Exception:
@@ -475,7 +475,7 @@ the generic hook CLI. This works for Python, Ruby, Go, Rust, or any language.
 ### exec wrapper (simplest)
 
 ```bash
-agent-pulse exec \
+npx agent-pulse exec \
   --service my-agent/github \
   --tool gh \
   --resource pulls \
@@ -486,7 +486,7 @@ agent-pulse exec \
 
 ```bash
 # Before tool execution
-agent-pulse hook generic \
+npx agent-pulse hook generic \
   --action lock \
   --service my-agent/tool \
   --tool mytool \
@@ -494,7 +494,7 @@ agent-pulse hook generic \
   --session my-session-id
 
 # After tool execution
-agent-pulse hook generic \
+npx agent-pulse hook generic \
   --action unlock \
   --service my-agent/tool \
   --exit-code 0 \
@@ -517,7 +517,7 @@ def run_with_pulse(
 ) -> subprocess.CompletedProcess:
     """Run a command wrapped with agent-pulse observability."""
     pulse_args = [
-        "agent-pulse", "exec",
+        "npx", "agent-pulse", "exec",
         "--service", service,
     ]
     if tool:

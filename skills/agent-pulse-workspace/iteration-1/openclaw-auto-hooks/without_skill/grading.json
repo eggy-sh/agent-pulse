@@ -1,0 +1,31 @@
+{
+  "eval_id": 2,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "recommends_plugin_hooks",
+      "passed": true,
+      "evidence": "Mentions before_tool_call and after_tool_call hooks in the plugin configuration"
+    },
+    {
+      "text": "includes_config_json",
+      "passed": false,
+      "evidence": "Does not provide the correct OpenClaw config.json format. Shows invented shell commands like 'agent-pulse exec --lock --stdin' instead of 'npx agent-pulse hook openclaw'."
+    },
+    {
+      "text": "explains_command_family_mapping",
+      "passed": false,
+      "evidence": "Does not explain command family mapping or openclaw/-prefixed service names. No mention of how binaries map to families."
+    },
+    {
+      "text": "includes_setup_steps",
+      "passed": true,
+      "evidence": "Has 'npm install -g agent-pulse' for installation"
+    },
+    {
+      "text": "mentions_automatic_tracking",
+      "passed": true,
+      "evidence": "States 'all exec tool calls will be tracked automatically' and 'fully automatic'"
+    }
+  ]
+}

@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import chalk from "chalk";
 import { PulseClient } from "../../core/client.js";
 import { redactCommand } from "../../utils/redact.js";
-import { log, formatDuration } from "../../utils/logger.js";
+import { log, chrome, formatDuration } from "../../utils/logger.js";
 import { parseGwsCommand, parseGwsOutput } from "../../adapters/gws.js";
 import type { GwsCommandInfo, GwsResultInfo } from "../../adapters/gws.js";
 
@@ -11,10 +11,10 @@ import type { GwsCommandInfo, GwsResultInfo } from "../../adapters/gws.js";
  * Dedicated GWS (Google Workspace CLI) wrapper command.
  *
  * Usage:
- *   agent-pulse gws drive files list --params '{"pageSize": 10}'
+ *   npx agent-pulse gws drive files list --params '{"pageSize": 10}'
  *
  * This is equivalent to:
- *   agent-pulse exec --service gws-drive --tool gws --resource files -- gws drive files list --params '{"pageSize": 10}'
+ *   npx agent-pulse exec --service gws-drive --tool gws --resource files -- gws drive files list --params '{"pageSize": 10}'
  *
  * But with automatic metadata extraction and GWS-aware output parsing.
  */
@@ -42,7 +42,7 @@ export function makeGwsCommand(): Command {
       const opts = cmd.opts();
       const parentOpts = gws.parent?.opts() ?? {};
       const jsonOutput = parentOpts.json === true;
-      const quiet = opts.quiet === true;
+      const quiet = opts.quiet === true || !process.stdout.isTTY;
 
       // Collect all args after "gws" subcommand from process.argv.
       // Commander will have consumed "agent-pulse" and "gws" but the
@@ -51,16 +51,16 @@ export function makeGwsCommand(): Command {
 
       // Handle help explicitly since we disabled Commander's helpOption
       if (gwsArgs.length === 0 || gwsArgs[0] === "--help" || gwsArgs[0] === "-h") {
-        console.log(`Usage: agent-pulse gws <service> <resource> <method> [gws flags]
+        console.log(`Usage: npx agent-pulse gws <service> <resource> <method> [gws flags]
 
 Wrap a gws (Google Workspace CLI) command with automatic observability.
 Auto-extracts service, resource, and method metadata from the gws command structure.
 
 Examples:
-  agent-pulse gws drive files list --params '{"pageSize": 10}'
-  agent-pulse gws sheets spreadsheets create --body '{"properties":{"title":"Report"}}'
-  agent-pulse gws gmail users messages list --params '{"userId":"me"}'
-  agent-pulse gws calendar events list --params '{"calendarId":"primary"}'
+  npx agent-pulse gws drive files list --params '{"pageSize": 10}'
+  npx agent-pulse gws sheets spreadsheets create --body '{"properties":{"title":"Report"}}'
+  npx agent-pulse gws gmail users messages list --params '{"userId":"me"}'
+  npx agent-pulse gws calendar events list --params '{"calendarId":"primary"}'
 
 Options:
   -s, --session <id>              Session ID
@@ -73,8 +73,8 @@ Options:
 
       if (gwsArgs.length === 0) {
         log.error("No gws command specified.");
-        log.dim("Usage: agent-pulse gws <service> <resource> <method> [gws flags]");
-        log.dim("Example: agent-pulse gws drive files list --params '{\"pageSize\": 10}'");
+        log.dim("Usage: npx agent-pulse gws <service> <resource> <method> [gws flags]");
+        log.dim("Example: npx agent-pulse gws drive files list --params '{\"pageSize\": 10}'");
         process.exit(1);
       }
 
@@ -314,33 +314,33 @@ Options:
             duration_human: formatDuration(duration),
           });
         } else if (!quiet) {
-          console.log("");
-          console.log(chalk.dim("  ─────────────────────────────────"));
-          console.log(`  ${chalk.dim("run_id")}     ${chalk.white(runId)}`);
-          console.log(`  ${chalk.dim("service")}    ${chalk.white(serviceName)}`);
-          console.log(
+          chrome.blank();
+          chrome.log(chalk.dim("  ─────────────────────────────────"));
+          chrome.log(`  ${chalk.dim("run_id")}     ${chalk.white(runId)}`);
+          chrome.log(`  ${chalk.dim("service")}    ${chalk.white(serviceName)}`);
+          chrome.log(
             `  ${chalk.dim("gws")}        ${chalk.white(cmdInfo.service)}/${chalk.white(cmdInfo.resource)} ${chalk.cyan(cmdInfo.method)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("operation")}  ${formatOperationType(cmdInfo.operationType)}`,
           );
           if (resultInfo.itemCount !== null) {
-            console.log(
+            chrome.log(
               `  ${chalk.dim("items")}      ${chalk.white(String(resultInfo.itemCount))}${resultInfo.hasNextPage ? chalk.dim(" (more pages)") : ""}`,
             );
           }
           if (resultInfo.errorType) {
-            console.log(
+            chrome.log(
               `  ${chalk.dim("error")}      ${chalk.red(resultInfo.errorType)}${resultInfo.httpStatus ? chalk.dim(` (${resultInfo.httpStatus})`) : ""}`,
             );
           }
-          console.log(
+          chrome.log(
             `  ${chalk.dim("exit code")}  ${exitCode === 0 ? chalk.green(exitCode) : chalk.red(exitCode)}`,
           );
-          console.log(
+          chrome.log(
             `  ${chalk.dim("duration")}   ${chalk.white(formatDuration(duration))}`,
           );
-          console.log("");
+          chrome.blank();
         }
 
         process.exit(exitCode);

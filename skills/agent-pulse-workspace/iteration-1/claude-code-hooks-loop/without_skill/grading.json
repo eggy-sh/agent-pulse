@@ -1,0 +1,31 @@
+{
+  "eval_id": 1,
+  "run_type": "without_skill",
+  "expectations": [
+    {
+      "text": "includes_hooks_config",
+      "passed": false,
+      "evidence": "Uses '.claude/hooks.json' instead of the correct '.claude/settings.json'. Config structure also differs from actual Claude Code format (missing 'matcher' and 'type' fields)."
+    },
+    {
+      "text": "includes_hook_commands",
+      "passed": false,
+      "evidence": "Uses invented commands like 'agent-pulse hook lock', 'agent-pulse hook beat', 'agent-pulse hook unlock' instead of the actual 'npx agent-pulse hook claude-code --event pre-tool-use' syntax."
+    },
+    {
+      "text": "includes_loop_command",
+      "passed": true,
+      "evidence": "Provides a /loop command for checking stale/dead runs every 2 minutes"
+    },
+    {
+      "text": "includes_setup_steps",
+      "passed": true,
+      "evidence": "Has 'npm install -g agent-pulse' for installation"
+    },
+    {
+      "text": "covers_session_tracking",
+      "passed": true,
+      "evidence": "Mentions SessionStart and SessionEnd hooks with lock/unlock for session tracking"
+    }
+  ]
+}

@@ -2,13 +2,33 @@ import chalk from "chalk";
 
 const PREFIX = chalk.bold.cyan("pulse");
 
+/**
+ * Logging helpers that separate human messages (stderr) from data (stdout).
+ *
+ * All human-facing messages (info, success, warn, error, dim) go to stderr
+ * so they never pollute piped data output. Data output (json) goes to stdout.
+ *
+ * This means:
+ *   npx agent-pulse runs --json | jq .       # clean JSON, no chrome
+ *   npx agent-pulse exec --service x -- ls   # ls output on stdout, pulse messages on stderr
+ *   npx agent-pulse status 2>/dev/null        # just the table
+ */
 export const log = {
-  info: (msg: string) => console.log(`${PREFIX} ${msg}`),
-  success: (msg: string) => console.log(`${PREFIX} ${chalk.green("✓")} ${msg}`),
-  warn: (msg: string) => console.log(`${PREFIX} ${chalk.yellow("⚠")} ${msg}`),
+  info: (msg: string) => console.error(`${PREFIX} ${msg}`),
+  success: (msg: string) => console.error(`${PREFIX} ${chalk.green("✓")} ${msg}`),
+  warn: (msg: string) => console.error(`${PREFIX} ${chalk.yellow("⚠")} ${msg}`),
   error: (msg: string) => console.error(`${PREFIX} ${chalk.red("✗")} ${msg}`),
-  dim: (msg: string) => console.log(`${PREFIX} ${chalk.dim(msg)}`),
-  json: (data: unknown) => console.log(JSON.stringify(data, null, 2)),
+  dim: (msg: string) => console.error(`${PREFIX} ${chalk.dim(msg)}`),
+  json: (data: unknown) => {
+    const indent = process.stdout.isTTY ? 2 : 0;
+    console.log(JSON.stringify(data, null, indent));
+  },
+};
+
+/** Write chrome/decoration to stderr so it doesn't pollute piped output. */
+export const chrome = {
+  log: (msg: string) => process.stderr.write(msg + "\n"),
+  blank: () => process.stderr.write("\n"),
 };
 
 export function formatStatus(status: string): string {

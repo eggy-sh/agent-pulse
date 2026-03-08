@@ -1,6 +1,6 @@
 import { Command } from "commander";
 import chalk from "chalk";
-import { log } from "../../utils/logger.js";
+import { log, chrome } from "../../utils/logger.js";
 
 export function makeServerCommand(): Command {
   const server = new Command("server").description(
@@ -25,7 +25,7 @@ export function makeServerCommand(): Command {
         config.database.path = opts.db;
       }
 
-      const spinner = ora("Starting agent-pulse server...").start();
+      const spinner = ora({ text: "Starting agent-pulse server...", stream: process.stderr }).start();
 
       try {
         const { startServer } = await import("../../server/index.js");
@@ -40,27 +40,27 @@ export function makeServerCommand(): Command {
 
         spinner.succeed("Server started");
 
-        console.log("");
-        console.log(
+        chrome.blank();
+        chrome.log(
           chalk.bold.cyan("  agent-pulse server"),
         );
-        console.log(
+        chrome.log(
           chalk.dim("  ─────────────────────────────────"),
         );
-        console.log(
+        chrome.log(
           `  ${chalk.dim("Listening on")}  ${chalk.green(`http://${host}:${port}`)}`,
         );
-        console.log(
+        chrome.log(
           `  ${chalk.dim("Database")}      ${chalk.white(config.database.path)}`,
         );
-        console.log(
+        chrome.log(
           `  ${chalk.dim("API docs")}      ${chalk.white(`http://${host}:${port}/api/v1/overview`)}`,
         );
-        console.log("");
-        console.log(
+        chrome.blank();
+        chrome.log(
           chalk.dim("  Press Ctrl+C to stop the server"),
         );
-        console.log("");
+        chrome.blank();
 
         await startServer(overrides);
       } catch (error) {
